@@ -11,6 +11,15 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  server: {
+    proxy: {
+      "/api": {
+        target: "https://book-riding-system.vercel.app",
+        changeOrigin: true,
+        secure: true,
+      },
+    },
+  },
   build: {
     outDir: "dist",
   },
