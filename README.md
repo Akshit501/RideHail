@@ -4,7 +4,7 @@ A production-grade, fully responsive, and role-based ride booking platform front
 
 ## 🌐 Live Demo
 
-**Frontend:** [https://ride-booking-frontend-xi.vercel.app](https://ride-booking-frontend-xi.vercel.app)
+**Frontend:** [https://ride-hail-lemon.vercel.app](https://ride-hail-lemon.vercel.app)
 **Backend API:** [https://book-riding-system.vercel.app](https://book-riding-system.vercel.app)
 
 ## 📖 Project Overview
