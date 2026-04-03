@@ -61,7 +61,7 @@ const DashboardNavbar = () => {
       {/* মোবাইল ডিভাইসে লোগো বা ছোট নাম দেখাতে পারিস */}
       <div className="md:hidden">
         <span className="font-black text-indigo-600 text-xl tracking-tighter">
-          RideX
+          Ride Hail
         </span>
       </div>
 

@@ -96,7 +96,7 @@ const Home: React.FC = () => {
               </h1>
               <p className="text-xl text-slate-600 dark:text-slate-400 mt-6 max-w-lg">
                 Book a ride in seconds, track your driver in real-time, and
-                reach your destination safely with RideX.
+                reach your destination safely with Ride Hail.
               </p>
 
               <div className="flex flex-wrap gap-4 mt-10">
@@ -176,12 +176,12 @@ const Home: React.FC = () => {
                 },
                 {
                   icon: <Zap size={32} />,
-                  title: "RideX Flash",
+                  title: "Ride Hail Flash",
                   desc: "Need a bike to beat the traffic? Our fastest service.",
                 },
                 {
                   icon: <Shield size={32} />,
-                  title: "RideX Business",
+                  title: "Ride Hail Business",
                   desc: "Premium vehicles for your professional meetings.",
                 },
               ].map((card, i) => (
@@ -308,7 +308,7 @@ const Home: React.FC = () => {
             <div className="space-y-8">
               <h2 className="text-4xl lg:text-6xl font-extrabold leading-tight">
                 Take the <br />
-                <span className="text-indigo-600">RideX</span> with you.
+                <span className="text-indigo-600">Ride Hail</span> with you.
               </h2>
               <p className="text-slate-500 dark:text-slate-400 text-xl leading-relaxed">
                 Download our mobile app for the fastest booking experience, live
@@ -457,7 +457,7 @@ const Home: React.FC = () => {
             {[
               {
                 q: "How do I pay for my ride?",
-                a: "You can pay via Cash, Credit/Debit Cards, or Digital Wallets linked to your RX account.",
+                a: "You can pay via Cash, Credit/Debit Cards, or Digital Wallets linked to your Ride Hail account.",
               },
               {
                 q: "What if I lose an item in the car?",

@@ -78,7 +78,7 @@ export default function RegisterPage() {
                 Create Account
               </h1>
               <p className="text-slate-500 dark:text-slate-400 text-sm">
-                Fill in your details to start your journey with RideX.
+                Fill in your details to start your journey with Ride Hail.
               </p>
             </div>
 

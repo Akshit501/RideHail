@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from "react";
 import { useRequestRideMutation } from "@/redux/features/rider/rider.api";
 import { loadStripe } from "@stripe/stripe-js";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 import {
   Elements,
   useStripe,
@@ -156,12 +158,140 @@ const RequestRide = () => {
   const [fare, setFare] = useState<number | null>(null);
   const [showPayment, setShowPayment] = useState(false);
   const [selectedMethod, setSelectedMethod] = useState<"card" | "cash">("card");
+  const [pickupPoint, setPickupPoint] = useState<L.LatLngLiteral | null>(null);
+  const [dropoffPoint, setDropoffPoint] = useState<L.LatLngLiteral | null>(null);
+  const mapContainerId = "ride-map";
+  const mapRef = React.useRef<L.Map | null>(null);
+  const pickupMarkerRef = React.useRef<L.Marker | null>(null);
+  const dropoffMarkerRef = React.useRef<L.Marker | null>(null);
+  const lineRef = React.useRef<L.Polyline | null>(null);
   const [requestRide, { isLoading }] = useRequestRideMutation();
+
+  const formatCoords = (point: L.LatLngLiteral) =>
+    `${point.lat.toFixed(5)}, ${point.lng.toFixed(5)}`;
+
+  const markerIcon = (label: string, color: string) =>
+    L.divIcon({
+      html: `<div style="width:24px;height:24px;border-radius:999px;background:${color};color:white;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;box-shadow:0 4px 10px rgba(0,0,0,0.25)">${label}</div>`,
+      className: "",
+      iconSize: [24, 24],
+      iconAnchor: [12, 12],
+    });
 
   useEffect(() => {
     if (pickup && dropoff) setFare(calculateFare(pickup, dropoff));
     else setFare(null);
   }, [pickup, dropoff]);
+
+  useEffect(() => {
+    if (mapRef.current) return;
+
+    const map = L.map(mapContainerId, {
+      zoomControl: true,
+      attributionControl: true,
+    }).setView([23.8103, 90.4125], 12);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+      attribution: "&copy; OpenStreetMap contributors",
+    }).addTo(map);
+
+    map.on("click", (e: L.LeafletMouseEvent) => {
+      const point = { lat: e.latlng.lat, lng: e.latlng.lng };
+
+      if (!pickupPoint || (pickupPoint && dropoffPoint)) {
+        setPickupPoint(point);
+        setDropoffPoint(null);
+        setPickup(formatCoords(point));
+        setDropoff("");
+        return;
+      }
+
+      setDropoffPoint(point);
+      setDropoff(formatCoords(point));
+    });
+
+    mapRef.current = map;
+
+    return () => {
+      map.remove();
+      mapRef.current = null;
+    };
+  }, [pickupPoint, dropoffPoint]);
+
+  useEffect(() => {
+    if (!mapRef.current) return;
+
+    if (pickupMarkerRef.current) {
+      pickupMarkerRef.current.remove();
+      pickupMarkerRef.current = null;
+    }
+    if (dropoffMarkerRef.current) {
+      dropoffMarkerRef.current.remove();
+      dropoffMarkerRef.current = null;
+    }
+    if (lineRef.current) {
+      lineRef.current.remove();
+      lineRef.current = null;
+    }
+
+    if (pickupPoint) {
+      pickupMarkerRef.current = L.marker(pickupPoint, {
+        icon: markerIcon("P", "#4f46e5"),
+      })
+        .addTo(mapRef.current)
+        .bindPopup("Pickup point");
+    }
+
+    if (dropoffPoint) {
+      dropoffMarkerRef.current = L.marker(dropoffPoint, {
+        icon: markerIcon("D", "#e11d48"),
+      })
+        .addTo(mapRef.current)
+        .bindPopup("Dropoff point");
+    }
+
+    if (pickupPoint && dropoffPoint) {
+      lineRef.current = L.polyline([pickupPoint, dropoffPoint], {
+        color: "#6366f1",
+        weight: 4,
+      }).addTo(mapRef.current);
+
+      mapRef.current.fitBounds(
+        L.latLngBounds([
+          [pickupPoint.lat, pickupPoint.lng],
+          [dropoffPoint.lat, dropoffPoint.lng],
+        ]),
+        { padding: [30, 30] }
+      );
+    } else if (pickupPoint) {
+      mapRef.current.setView([pickupPoint.lat, pickupPoint.lng], 14);
+    }
+  }, [pickupPoint, dropoffPoint]);
+
+  const useCurrentLocationAsPickup = () => {
+    if (!navigator.geolocation) {
+      toast.error("Geolocation not supported in this browser");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const point = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+        setPickupPoint(point);
+        setPickup(formatCoords(point));
+        if (mapRef.current) {
+          mapRef.current.setView([point.lat, point.lng], 14);
+        }
+      },
+      () => {
+        toast.error("Unable to access your location");
+      }
+    );
+  };
 
   const handleRequest = async () => {
     if (!fare) return;
@@ -187,6 +317,8 @@ const RequestRide = () => {
     setDropoff("");
     setFare(null);
     setShowPayment(false);
+    setPickupPoint(null);
+    setDropoffPoint(null);
   };
 
   return (
@@ -238,6 +370,39 @@ const RequestRide = () => {
                     className="h-16 rounded-2xl bg-slate-50 border-none font-bold text-lg px-6 focus:bg-white focus:ring-4 focus:ring-rose-50 transition-all"
                   />
                 </div>
+              </div>
+
+              <div className="rounded-[2rem] border border-slate-100 p-4 bg-slate-50/60">
+                <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
+                  <p className="text-xs font-black text-slate-500 uppercase tracking-widest">
+                    Map Picker
+                  </p>
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={useCurrentLocationAsPickup}
+                      className="px-3 py-2 text-xs font-bold rounded-xl bg-indigo-50 text-indigo-700 hover:bg-indigo-100"
+                    >
+                      Use My Location
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setPickupPoint(null);
+                        setDropoffPoint(null);
+                        setPickup("");
+                        setDropoff("");
+                      }}
+                      className="px-3 py-2 text-xs font-bold rounded-xl bg-rose-50 text-rose-700 hover:bg-rose-100"
+                    >
+                      Clear Pins
+                    </button>
+                  </div>
+                </div>
+                <p className="text-sm text-slate-500 mb-3">
+                  Click once to set pickup, click again to set dropoff.
+                </p>
+                <div id={mapContainerId} className="h-72 w-full rounded-2xl overflow-hidden" />
               </div>
 
               {fare !== null && (

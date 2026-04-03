@@ -62,7 +62,7 @@ const serviceMegaMenu = [
     href: "/pricing",
   },
   {
-    title: "RideX Shield",
+    title: "Ride Hail Shield",
     desc: "Premium safety for your family",
     icon: <Shield className="text-emerald-500" />,
     href: "/services/ridex-shield",
@@ -110,10 +110,10 @@ export default function Navbar() {
           {/* 1. Logo Section */}
           <div className="flex items-center gap-8">
             <Link to="/" className="flex items-center gap-2 group">
-              <div className="bg-indigo-600 p-1.5 rounded-lg group-hover:rotate-12 transition-transform">
-                <span className="text-white font-black text-sm">RX</span>
+              <div className="bg-gradient-to-br from-indigo-600 to-sky-500 p-1.5 rounded-lg group-hover:rotate-12 transition-transform shadow-md">
+                <span className="text-white font-black text-sm">RH</span>
               </div>
-              <span className="font-black text-xl tracking-tighter">RideX</span>
+              <span className="font-black text-xl tracking-tight bg-gradient-to-r from-slate-900 to-indigo-700 dark:from-white dark:to-indigo-300 bg-clip-text text-transparent">Ride Hail</span>
             </Link>
 
             {/* 2. Desktop Navigation Menu */}

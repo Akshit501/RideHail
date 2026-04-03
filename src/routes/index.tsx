@@ -32,6 +32,7 @@ import Sitemap from "@/pages/home/Sitemap";
 import SecurityPage from "@/pages/home/Security";
 import Unauthorized from "@/pages/home/Unauthorized";
 import PricingPage from "@/pages/home/Pricing";
+import RequestRide from "@/pages/rider/RequestRide";
 
 export const router = createBrowserRouter([
   {
@@ -190,5 +191,9 @@ export const router = createBrowserRouter([
   {
     Component: PricingPage,
     path: "/pricing",
+  },
+  {
+    Component: RequestRide,
+    path: "/demo-book-ride",
   },
 ]);

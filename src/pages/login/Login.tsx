@@ -21,10 +21,10 @@ export default function LoginPage() {
             <ChevronLeft size={16} /> Back to Home
           </Link>
           <div className="flex items-center gap-2 lg:hidden">
-            <div className="bg-indigo-600 p-1.5 rounded-lg">
-              <span className="text-white font-bold text-xs">RX</span>
+            <div className="bg-gradient-to-br from-indigo-600 to-sky-500 p-1.5 rounded-lg shadow-md">
+              <span className="text-white font-bold text-xs">RH</span>
             </div>
-            <span className="font-bold">RideX</span>
+            <span className="font-bold">Ride Hail</span>
           </div>
         </div>
 
@@ -78,7 +78,7 @@ export default function LoginPage() {
             ))}
           </div>
           <p className="text-xl font-medium leading-relaxed italic">
-            "The easiest way to get around the city. RideX has completely
+            "The easiest way to get around the city. Ride Hail has completely
             changed how I commute to work every morning."
           </p>
           <div className="mt-6 flex items-center gap-4">

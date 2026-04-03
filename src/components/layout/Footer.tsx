@@ -219,7 +219,7 @@ export default function Footer() {
         {/* Bottom Section: Copyright & Legal */}
         <div className="py-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-slate-500">
-            © {currentYear} <span className="text-white font-bold">RideX</span>.
+            © {currentYear} <span className="text-white font-bold">Ride Hail</span>.
             Crafted with ❤️ for a better journey.
           </p>
           <div className="flex gap-8 text-sm text-slate-500">

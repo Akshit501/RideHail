@@ -17,7 +17,7 @@ import { Link } from "react-router";
 
 const PrivacyPolicy = () => {
   const lastUpdated = "Dec 24, 2025";
-  const appName = "RideX";
+  const appName = "Ride Hail";
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
